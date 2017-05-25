@@ -1,13 +1,16 @@
+# -*-coding:utf-8-*-
 import cv2 as cv
 import os
 import sys
 import time
 import shutil
 import math
+import logging
+import logging.handlers
 import matplotlib.pyplot as plt
 
 
-def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isSecond):
+def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isFour, isEight):
     cell_size = 328
     cell_gap_w = 490
     cell_gap_h = 375
@@ -72,15 +75,26 @@ def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isSecond):
         index += 1
     # coord_y may be less than truth
     coord_y_big = []
-    while isSecond and len(coord_y) < 7:
-        print coord_y
-        coord_y.append(coord_y[len(coord_y) - 1] + cell_gap_h)
-    while (not isSecond) and len(coord_y) < 8:
-        print coord_y
-        coord_y.append(coord_y[len(coord_y) - 1] + cell_gap_h)
-    print 'generate ' + str(len(coord_x)) + 'x' + str(len(coord_y)) + ' small bmps'
-    # print coord_x
-    # print coord_y
+    # while isSecond and len(coord_y) < 7:
+    #     print coord_y
+    #     coord_y.append(coord_y[len(coord_y) - 1] + cell_gap_h)
+    # while (not isSecond) and len(coord_y) < 8:
+    #     print coord_y
+    #     coord_y.append(coord_y[len(coord_y) - 1] + cell_gap_h)
+    # print 'generate ' + str(len(coord_x)) + 'x' + str(len(coord_y)) + ' small bmps'
+    print coord_x
+    print coord_y
+    if isFour:
+        if len(coord_x) != 4:
+            logger.error(bmp_path + ' coord_x should be 4 but got ' + str(len(coord_x)))
+    elif len(coord_x) != 7:
+        logger.error(bmp_path + ' coord_x should be 7 but got ' + str(len(coord_x)))
+
+    if isEight:
+        if len(coord_y) != 8:
+            logger.error(bmp_path + ' coord_y should be 8 but got ' + str(len(coord_y)))
+    elif len(coord_y) != 7:
+        logger.error(bmp_path + ' coord_y should be 7 but got ' + str(len(coord_y)))
     for i in xrange(len(coord_x)):
         for j in xrange(len(coord_y)):
             crop_img = src_image[coord_y[j]:(coord_y[j] + cell_size), coord_x[i]:(coord_x[i] + cell_size), :]
@@ -100,13 +114,13 @@ def copy_xml(num_path, crop_num_path):
 
 def crop_images(num_path, crop_num_path):
     total = 0
-    bmp_list = [['11.bmp', '12.bmp', '13.bmp', '14.bmp', '15.bmp'],
-                ['21.bmp', '22.bmp', '23.bmp', '24.bmp', '25.bmp']]
-    width_num = [1, 4, 11, 18, 25]
+    bmp_list = [['11_看图王.bmp', '12_看图王.bmp', '13_看图王.bmp', '14_看图王.bmp', '15_看图王.bmp'],
+                ['21_看图王.bmp', '22_看图王.bmp', '23_看图王.bmp', '24_看图王.bmp', '25_看图王.bmp']]
+    width_num = [1, 5, 12, 19, 26]
     height_num = [1, 9]
     for w in xrange(5):
         for h in xrange(2):
-            total += crop_image(num_path, crop_num_path, bmp_list[h][w], width_num[w], height_num[h], h == 1)
+            total += crop_image(num_path, crop_num_path, bmp_list[h][w], width_num[w], height_num[h], w == 0, h == 0)
     return total
 
 
@@ -143,11 +157,22 @@ def crop_images_dir(root_dir):
     return total
 
 
+def init_logger():
+    logger = logging.getLogger("loggingmodule.NomalLogger")
+    handler = logging.FileHandler("crop_bmp.log")
+    formatter = logging.Formatter("[%(levelname)s][%(funcName)s][%(asctime)s]%(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    return logger
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print 'Usage: python bmp data dir'
         exit(1)
     data_dir = sys.argv[1]
+    logger = init_logger()
     start = time.time()
     total_num = crop_images_dir(data_dir)
     end = time.time()

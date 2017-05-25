@@ -1,0 +1,10 @@
+
+[ERROR][crop_image][2017-05-25 19:49:05,570]/home/share/bmp_crop/data/region_data/5.8/1/14_看图王.bmp coord_x should be 7 but got 8
+[ERROR][crop_image][2017-05-25 19:49:43,435]/home/share/bmp_crop/data/region_data/5.8/6/11_看图王.bmp coord_y should be 8 but got 7
+[ERROR][crop_image][2017-05-25 19:50:41,489]/home/share/bmp_crop/data/region_data/4.24/7 双晶并/15_看图王.bmp coord_y should be 8 but got 7
+[ERROR][crop_image][2017-05-25 19:52:09,843]/home/share/bmp_crop/data/region_data/5.2/6/11_看图王.bmp coord_x should be 4 but got 5
+[ERROR][crop_image][2017-05-25 19:52:48,481]/home/share/bmp_crop/data/region_data/5.2/20/22_看图王.bmp coord_x should be 7 but got 8
+[ERROR][crop_image][2017-05-25 19:53:34,091]/home/share/bmp_crop/data/region_data/5.6/1/21_看图王.bmp coord_x should be 4 but got 6
+[ERROR][crop_image][2017-05-25 19:56:40,782]/home/share/bmp_crop/data/region_data/5.5/20/11_看图王.bmp coord_y should be 8 but got 7
+[ERROR][crop_image][2017-05-25 19:57:44,044]/home/share/bmp_crop/data/region_data/4.26/5/22_看图王.bmp coord_x should be 7 but got 8
+[ERROR][crop_image][2017-05-25 19:57:58,984]/home/share/bmp_crop/data/region_data/4.28/15/22_看图王.bmp coord_x should be 7 but got 8
