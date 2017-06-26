@@ -35,7 +35,7 @@ def getlist(data_dir):
         val = wrong_map[int(num)]
         if val == -1:
             continue
-        num_dir = os.path.join(train_dir, num)
+        num_dir = os.path.join(val_dir, num)
         bmps = os.listdir(num_dir)
         for bmp in bmps:
             val_file.write(os.path.join(num_dir, bmp) + ' ' + str(val) + '\n')
