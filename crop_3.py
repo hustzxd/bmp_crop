@@ -10,8 +10,7 @@ import logging.handlers
 import matplotlib.pyplot as pltforever
 
 
-
-def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isFour, isEight):
+def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isFour, header):
     cell_size = 328
     cell_gap_w = 490
     cell_gap_h = 375
@@ -91,37 +90,26 @@ def crop_image(num_path, crop_num_path, bmp_name, w_num, h_num, isFour, isEight)
     elif len(coord_x) != 7:
         logger.error(bmp_path + ' coord_x should be 7 but got ' + str(len(coord_x)))
 
-    if isEight:
-        if len(coord_y) != 8:
-            logger.error(bmp_path + ' coord_y should be 8 but got ' + str(len(coord_y)))
-    elif len(coord_y) != 7:
-        logger.error(bmp_path + ' coord_y should be 7 but got ' + str(len(coord_y)))
+    if len(coord_y) != 5:
+        logger.error(bmp_path + ' coord_y should be 5 but got ' + str(len(coord_y)))
     for i in xrange(len(coord_x)):
         for j in xrange(len(coord_y)):
             crop_img = src_image[coord_y[j]:(coord_y[j] + cell_size), coord_x[i]:(coord_x[i] + cell_size), :]
-            cv.imwrite(crop_num_path + "/" + str(w_num + i) + "x" + str(h_num + j) + ".bmp", crop_img)
+            cv.imwrite(crop_num_path + "/" + header + '_' + str(w_num + i) + "x" + str(h_num + j) + ".bmp", crop_img)
             print crop_num_path + "/" + str(w_num + i) + "x" + str(h_num + j) + ".bmp"
     return (len(coord_x)) * (len(coord_y))
 
 
-def copy_xml(num_path, crop_num_path):
-    files = os.listdir(num_path)
-    for f in files:
-        if f.endswith('xml'):
-            src = os.path.join(num_path, f)
-            dst = os.path.join(crop_num_path, f)
-            shutil.copyfile(src, dst)
-
-
-def crop_images(num_path, crop_num_path):
+def crop_images(num_path, crop_num_path, header):
     total = 0
     bmp_list = [['11_看图王.bmp', '12_看图王.bmp', '13_看图王.bmp', '14_看图王.bmp', '15_看图王.bmp'],
-                ['21_看图王.bmp', '22_看图王.bmp', '23_看图王.bmp', '24_看图王.bmp', '25_看图王.bmp']]
+                ['21_看图王.bmp', '22_看图王.bmp', '23_看图王.bmp', '24_看图王.bmp', '25_看图王.bmp'],
+                ['31_看图王.bmp', '32_看图王.bmp', '33_看图王.bmp', '34_看图王.bmp', '35_看图王.bmp']]
     width_num = [1, 5, 12, 19, 26]
-    height_num = [1, 9]
+    height_num = [1, 6, 11]
     for w in xrange(5):
-        for h in xrange(2):
-            total += crop_image(num_path, crop_num_path, bmp_list[h][w], width_num[w], height_num[h], w == 0, h == 0)
+        for h in xrange(3):
+            total += crop_image(num_path, crop_num_path, bmp_list[h][w], width_num[w], height_num[h], w == 0, header)
     return total
 
 
@@ -139,9 +127,9 @@ def mk_dir(path):
 
 def crop_images_dir(root_dir):
     total = 0
-    region_data_path = os.path.join(root_dir, 'region_data')
+    region_data_path = os.path.join(root_dir, 'region_data_2')
     # region_data_path = os.path.join(root_dir, 'region_test')
-    crop_data_path = os.path.join(root_dir, 'crop_data')
+    crop_data_path = os.path.join(root_dir, 'crop_data_2')
     # crop_data_path = os.path.join(root_dir, 'crop_test')
 
     date_dirs = os.listdir(region_data_path)
@@ -153,8 +141,7 @@ def crop_images_dir(root_dir):
             num_path = os.path.join(date_path, num_dir)
             crop_num_path = os.path.join(crop_date_path, num_dir)
             mk_dir(crop_num_path)
-            total = total + crop_images(num_path, crop_num_path)
-            copy_xml(num_path, crop_num_path)
+            total = total + crop_images(num_path, crop_num_path, num_dir)
     return total
 
 
